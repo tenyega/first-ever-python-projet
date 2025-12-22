@@ -1,0 +1,102 @@
+import random  
+# import of the __package__ inside the python 
+import streamlit as st
+
+
+# constant variables using snake case 
+nb_python=None
+nb_user=None
+user_name=None
+user_money= 10
+nb_attempts=1
+user_bet= 0
+response=None
+
+# def is used to declare the function  here its without parameters 
+# here the indentation is important in python
+def welcome():
+    global user_name, user_bet, user_money
+    print("Welcome to the Casino!")
+    user_name = input("Please enter your name: ")
+    # saisi au clavier  
+    print(f"Hello, {user_name}! You have ${user_money} to start with.")
+    user_bet= int(input(f"{user_name}, you have ${user_money}. How much would you like to bet? "))
+    # here the f is used for the formatted string literals 
+
+
+
+def python_number():
+    global nb_python
+    nb_python = random.randint(1, 10)
+    # randint is used to generate random integer between the two values 
+    # here 1 and 100 inclusive 
+    # print(nb_python) # for testing purposes only
+
+
+def user_number():
+    # here this function allows the user to input a number between 1 and 10 and count the number of attempts
+    global nb_user, nb_attempts, user_money, user_bet, response
+    while True:
+        try:
+            if nb_attempts <=3:
+              
+                if user_bet > user_money:
+                    print(f"You cannot bet more than you have, {user_name}. Please enter a valid bet.")
+                    continue
+                print(f"Attempt {nb_attempts} of 3.")
+                if(nb_user == nb_python):
+                    response= input("You have already guessed the correct number! do u want to move to next level ? y/n: ")
+                    print(f"ur choice is {response}")
+                    break
+
+                nb_user = int(input(f"{user_name}, please choose a number between 1 and 10: "))
+                if 0 <= nb_user <= 10:
+                        compare_numbers()
+                                 
+                else:
+                    print("Number must be between 1 and 10. Try again.")
+            else :
+                    user_money=user_money - user_bet                  
+                    print(f"Sorry {user_name}, you've exceeded the maximum number of attempts. The correct number was {nb_python} and now your account is {user_money}.")
+                    break
+           
+        except ValueError:
+            print("Invalid input. Please enter an integer between 1 and 10.")
+
+
+
+def compare_numbers():
+    global user_bet, nb_attempts, user_money
+    new_money=0
+    if nb_python == nb_user:
+       if(nb_attempts == 1):
+            new_money = user_bet * 2
+            user_money=user_money-user_bet
+            user_money=new_money+user_money
+            print(f"Congratulations {user_name}! You guessed the correct number. You win  {user_money}.")
+       elif(nb_attempts == 2):
+            new_money = user_bet
+            user_money=user_money-user_bet
+            user_money=new_money+user_money
+            print(f"Well done {user_bet}! You guessed the correct number. You win {user_money}.")
+       elif(nb_attempts == 3):
+            new_money = user_bet / 2
+            user_money=user_money-user_bet
+            user_money=new_money+user_money
+            print(f"Good job {user_name}! You guessed the correct number. You win {user_money}.")
+       elif(nb_attempts > 3):
+            input(f"Thank you for your participation Do u want to move to the next level. Type y for Yes or N for no: ")
+    else:
+        if(nb_user<nb_python):
+            print(f"Your number is too low. Try again.  ")
+            nb_attempts+=1
+        elif(nb_user>nb_python):
+            print(f"Your number is too high. Try again. ")
+            nb_attempts+=1
+       
+# Main program execution
+welcome()
+python_number()
+print("The Python has chosen its number between 1 and 10.")
+user_number()
+

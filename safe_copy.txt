@@ -1,0 +1,59 @@
+import random  
+# import of the __package__ inside the python 
+
+# constant variables using snake case 
+nb_python=None
+nb_user=None
+user_name=None
+user_money= 10
+
+# def is used to declare the function  here its without parameters 
+# here the indentation is important in python
+def welcome():
+    global user_name
+    print("Welcome to the Casino!")
+    user_name = input("Please enter your name: ")
+    # saisi au clavier  
+    print(f"Hello, {user_name}! You have ${user_money} to start with.")
+    # here the f is used for the formatted string literals 
+
+
+
+def python_number():
+    global nb_python
+    nb_python = random.randint(1, 10)
+    # randint is used to generate random integer between the two values 
+    # here 1 and 100 inclusive 
+    # print(nb_python) # for testing purposes only
+
+
+def user_number():
+    # here this function allows the user to input a number between 1 and 10 and count the number of attempts
+    global nb_user
+    while True:
+        try:
+            nb_user = int(input(f"{user_name}, please choose a number between 1 and 10: "))
+            if 0 <= nb_user <= 10:
+              compare_numbers(nb_python, nb_user)  
+               
+            else:
+                print("Number must be between 1 and 10. Try again.")
+        except ValueError:
+            print("Invalid input. Please enter an integer between 1 and 10.")
+
+# Here with this function we are comparing the two numbers from the user and the one python has generated. 
+def compare_numbers(nb_python, nb_user):
+    global user_money
+    if nb_python == nb_user:
+        user_money += 5
+        print(f"Congratulations {user_name}! You guessed the correct number. You win $5.")
+    else:
+        user_money -= 2
+        print(f"Sorry {user_name}, the correct number was {nb_python}. You lose $2.")
+    print(f"You now have ${user_money}.")
+
+welcome()
+python_number()
+print("The Python has chosen its number between 1 and 10.")
+user_number()
+
