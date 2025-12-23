@@ -3,8 +3,8 @@ import random
 import sys
 from threading import Timer # Timer is a class from Python’s standard library   under the Module: threading
 #   this is to get the counter running for the response time 
-
-
+import json
+import os
 # constant variables using snake case 
 nb_python=None
 nb_user=None
@@ -62,6 +62,7 @@ def user_number():
                 
                    
                     response= input(f"You have already guessed the correct number! you have {user_money} so do u want to move to next level ? y/n: ")
+                    write_log()
                     print(f"ur choice is {response}")
                     if(response == 'y' or response == 'Y'):
                         level += 1
@@ -74,11 +75,13 @@ def user_number():
                         user_number()
                         if(nb_attempts== max_attempts):  
                             print(f"Thank you for playing with us see you next time ")
+                            write_log()
                             return
                         elif(nb_attempts>max_attempts):  
                             print(f"Welcome to level {level}. The Python has chosen a new number between 1 and {max_level}.")
                     elif(response == 'n' or response == 'N'):
                         print(f"Thank you for playing, {user_name}! Your final account balance is ${user_money}.") 
+                        write_log()
                         break
 
                 timer = Timer(20, time_out)  
@@ -94,12 +97,40 @@ def user_number():
             else :
                     user_money=user_money - user_bet                  
                     print(f"Sorry {user_name}, you've exceeded the maximum number of attempts. The correct number was {nb_python} and now your account is {user_money}.")
+                    write_log()
                     return
           
         except ValueError:
             print(f"Invalid input. Please enter an integer between 1 and {max_level}.")
 
+def write_log():
+    new_attempt_dict = {
+        "attempts": nb_attempts,
+        "level": level,
+        "user_bet": user_bet,
+        "user_money": user_money
+    }
 
+    # Step 1: Load existing data if the file exists
+    if os.path.exists("log_history.json"):
+        with open("log_history.json", "r") as file:
+            try:
+                data = json.load(file)  # load existing JSON
+            except json.JSONDecodeError:
+                # If file is empty or corrupted, start fresh
+                data = {}
+    else:
+        data = {}
+
+    # Step 2: Append new attempt for the user
+    if user_name in data:
+        data[user_name].append(new_attempt_dict)
+    else:
+        data[user_name] = [new_attempt_dict]
+
+    # Step 3: Write updated data back to file
+    with open("log_history.json", "w") as file:
+        json.dump(data, file, indent=4)
 
 def compare_numbers():
     global user_bet, nb_attempts, user_money
@@ -110,18 +141,22 @@ def compare_numbers():
             user_money=user_money-user_bet
             user_money=new_money+user_money
             print(f"Congratulations {user_name}! You guessed the correct number. You win  {user_money}.")
+            write_log()
        elif(nb_attempts == 2):
             new_money = user_bet
             user_money=user_money-user_bet
             user_money=new_money+user_money
             print(f"Well done {user_bet}! You guessed the correct number. You win {user_money}.")
+            write_log()
        elif(nb_attempts == 3):
             new_money = user_bet / 2
             user_money=user_money-user_bet
             user_money=new_money+user_money
             print(f"Good job {user_name}! You guessed the correct number. You win {user_money}.")
+            write_log()
        elif(nb_attempts > max_attempts):
             input(f"Thank you for your participation Do u want to move to the next level. Type y for Yes or N for no: ")
+            write_log()
     else:
         if(nb_user<nb_python):
             print(f"Your number is too low. Try again.  ")
