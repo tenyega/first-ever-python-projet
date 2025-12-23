@@ -27,42 +27,74 @@ def welcome():
     
    
 
-
 def check_user():
-    if os.path.exists("log_history.json"):
-        with open("log_history.json", "r") as file:
-            try:
-                data = json.load(file)  # load existing JSON
-            except json.JSONDecodeError:
-                print("No valid data found.")
-                return
+    if not os.path.exists("log_history.json"):
+        print("No history found.")
+        return
 
-        # Initialize
-        best_level = -1
-        best_attempts = []
-        if user_name in data:
-        # Iterate only through the current user's attempts
-            for attempt in data[user_name]:
-                if attempt["level"] > best_level:
-                    best_level = attempt["level"]
-                    best_attempts = [attempt]  # reset list with new max
-                elif attempt["level"] == best_level:
-                    best_attempts.append(attempt)  # add to list
-
-            # Print best attempts for this user
-            print(f"🔥 Best level achieved for {user_name}: {best_level}\n")
-            for attempt in best_attempts:
-                print(f"Attempts: {attempt['attempts']}")
-                print(f"Level: {attempt['level']}")
-                print(f"User Bet: {attempt['user_bet']}")
-                print(f"User Money: {attempt['user_money']}")
-                print("-----------------------")
-        else : 
+    with open("log_history.json", "r") as file:
+        try:
+            data = json.load(file)
+        except json.JSONDecodeError:
+            print("No valid data found.")
             return
 
+    if user_name not in data:
+        print(f"No history found for {user_name}.")
+        return
+
+    best_level = 0
+    worst_level = float('inf')
+    max_bet = 0
+    min_bet = float('inf')
+    max_money = 0
+    min_money = float('inf')
+
+    best_attempt = None
+    worst_attempt = None
+
+    for attempt in data[user_name]:
+        # iterating to each of the data inside the data to get each of the level, bet and money 
+        lvl = attempt.get("level", 0)
+        bet = attempt.get("user_bet", 0)
+        money = attempt.get("user_money", 0)
+
+        # Track best and worst level
+        if lvl > best_level:
+            best_level = lvl
+            best_attempt = attempt
+        if lvl < worst_level:
+            worst_level = lvl
+            worst_attempt = attempt
+
+
+        # Track money
+        max_money = max(max_money, money)
+        min_money = min(min_money, money)
+
+    print(f"\nWelcome back {user_name}!\n")
+
+    if best_attempt:
+        print(":-) Best Attempt:")
+        print(f"Level: {best_attempt['level']}")
+        print(f"Attempts: {best_attempt['attempts']}")
+        print(f"Max Bet: {best_attempt['user_bet']} euro")
+        print(f"User Money: {best_attempt['user_money']}")
+        print("-----------------------")
+
+    if worst_attempt:
+        print(":-( Worst Attempt:")
+        print(f"Level: {worst_attempt['level']}")
+        print(f"Attempts: {worst_attempt['attempts']}")
+        print(f"Min Bet: {worst_attempt['user_bet']} euro")
+        print(f"User Money: {worst_attempt['user_money']}")
+        print("-----------------------")
+
+    avg_money = (max_money + min_money) / 2
+    print(f"Average money gained: {avg_money}\n")
 
 def time_out(): # this is not a pre defined method, this function is called exactly 20 second after the timer.start() function is called. 
-    print("\n⏰ 20 seconds passed. Sorry, better luck next time.")
+    print("\n 20 seconds passed. Sorry, better luck next time.")
     sys.exit() # getting out of the system from this point if the time excceds  and this function runs in background thread
 
 def python_number():
