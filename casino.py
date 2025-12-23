@@ -1,7 +1,8 @@
 import random  
 # import of the __package__ inside the python 
 import streamlit as st
-import time 
+import sys
+from threading import Timer
 #   this is to get the counter running for the response time 
 
 
@@ -25,6 +26,11 @@ def welcome():
     user_name = input("Please enter your name: ")
     # saisi au clavier   
     # here the f is used for the formatted string literals 
+
+
+def time_out():
+    print("\n⏰ 20 seconds passed. Sorry, better luck next time.")
+    sys.exit()
 
 def python_number():
     global nb_python, max_level,user_bet, user_money
@@ -76,8 +82,11 @@ def user_number():
                         print(f"Thank you for playing, {user_name}! Your final account balance is ${user_money}.") 
                         break
 
-               
+                timer = Timer(10, time_out)
+                timer.start()
                 nb_user = int(input(f"{user_name}, please choose a number between 1 and {max_level}: "))
+                             
+                timer.cancel()
                 if 0 <= nb_user <= max_level:
                         compare_numbers()
                                  
