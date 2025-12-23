@@ -1,14 +1,11 @@
 {
-    "yega": [
-        {
-            "attempts": 8,
-            "level": 3,
-            "user_bet": 3,
-            "user_money": 7
-        }
-    ],
-    "y": [
-        {
+    "yega": [{
+        "attempts": 8,
+        "level": 3,
+        "user_bet": 3,
+        "user_money": 7
+    }],
+    "y": [{
             "attempts": 3,
             "level": 1,
             "user_bet": 2,
@@ -34,9 +31,28 @@
         },
         {
             "attempts": 4,
-            "level": 3,
-            "user_bet": 5,
-            "user_money": 5.0
+            "level": 1,
+            "user_bet": 2,
+            "user_money": 8
+        }
+    ],
+    "ye": [{
+            "attempts": 2,
+            "level": 1,
+            "user_bet": 2,
+            "user_money": 10
+        },
+        {
+            "attempts": 2,
+            "level": 1,
+            "user_bet": 2,
+            "user_money": 10
+        },
+        {
+            "attempts": 4,
+            "level": 2,
+            "user_bet": 3,
+            "user_money": 8.5
         }
     ]
 }

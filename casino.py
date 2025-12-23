@@ -22,9 +22,43 @@ max_attempts=3
 def welcome():
     global user_name
     print("Welcome to the Casino!")
-    user_name = input("Please enter your name: ")
-    # saisi au clavier   
-    # here the f is used for the formatted string literals 
+    user_name = input("Please enter your name: ")  # saisi au clavier 
+    check_user()
+    
+   
+
+
+def check_user():
+    if os.path.exists("log_history.json"):
+        with open("log_history.json", "r") as file:
+            try:
+                data = json.load(file)  # load existing JSON
+            except json.JSONDecodeError:
+                print("No valid data found.")
+                return
+
+        # Initialize
+        best_level = -1
+        best_attempts = []
+        if user_name in data:
+        # Iterate only through the current user's attempts
+            for attempt in data[user_name]:
+                if attempt["level"] > best_level:
+                    best_level = attempt["level"]
+                    best_attempts = [attempt]  # reset list with new max
+                elif attempt["level"] == best_level:
+                    best_attempts.append(attempt)  # add to list
+
+            # Print best attempts for this user
+            print(f"🔥 Best level achieved for {user_name}: {best_level}\n")
+            for attempt in best_attempts:
+                print(f"Attempts: {attempt['attempts']}")
+                print(f"Level: {attempt['level']}")
+                print(f"User Bet: {attempt['user_bet']}")
+                print(f"User Money: {attempt['user_money']}")
+                print("-----------------------")
+        else : 
+            return
 
 
 def time_out(): # this is not a pre defined method, this function is called exactly 20 second after the timer.start() function is called. 
@@ -33,7 +67,7 @@ def time_out(): # this is not a pre defined method, this function is called exac
 
 def python_number():
     global nb_python, max_level,user_bet, user_money
-       
+     # here the f is used for the formatted string literals    
     print(f"Hello, {user_name}! You have ${user_money} to start with.")
     user_bet= int(input(f"{user_name}, you have ${user_money}. How much would you like to bet? "))
     nb_python = random.randint(1, max_level)
