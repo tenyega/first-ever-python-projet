@@ -1,8 +1,7 @@
 import random  
 # import of the __package__ inside the python 
-import streamlit as st
 import sys
-from threading import Timer
+from threading import Timer # Timer is a class from Python’s standard library   under the Module: threading
 #   this is to get the counter running for the response time 
 
 
@@ -15,7 +14,7 @@ nb_attempts=1
 user_bet= 0
 response=None
 level=1
-max_level=10
+max_level=10  # Out bound of the number in the level. 
 max_attempts=3
 
 # def is used to declare the function  here its without parameters 
@@ -28,9 +27,9 @@ def welcome():
     # here the f is used for the formatted string literals 
 
 
-def time_out():
+def time_out(): # this is not a pre defined method, this function is called exactly 20 second after the timer.start() function is called. 
     print("\n⏰ 20 seconds passed. Sorry, better luck next time.")
-    sys.exit()
+    sys.exit() # getting out of the system from this point if the time excceds  and this function runs in background thread
 
 def python_number():
     global nb_python, max_level,user_bet, user_money
@@ -48,7 +47,7 @@ def user_number():
     global nb_user, nb_attempts, user_money, user_bet, response, max_attempts, level, max_level
     while True:
         try:
-            if nb_attempts <=max_attempts:
+            if nb_attempts <=max_attempts:  # is the user always have the number of attempts left. 
               
                 if user_bet > user_money:
                     print(f"You cannot bet more than you have, {user_name}. Please enter a valid bet.")
@@ -67,13 +66,13 @@ def user_number():
                     if(response == 'y' or response == 'Y'):
                         level += 1
                         print(f"your level is {level}")
-                        max_level += 10
+                        max_level += 10 
                         nb_attempts=1
                         python_number()
-                        max_attempts=max_attempts+2
+                        max_attempts=max_attempts+2  # number of attempts for level 1 is 3 and level 2 is 5 and for level 3 its 7 number of attempts. thats why its added with 2 
                         print(f"The Python has chosen its number between 1 and {max_level}.")
                         user_number()
-                        if(nb_attempts== max_attempts): 
+                        if(nb_attempts== max_attempts):  
                             print(f"Thank you for playing with us see you next time ")
                             return
                         elif(nb_attempts>max_attempts):  
@@ -82,8 +81,8 @@ def user_number():
                         print(f"Thank you for playing, {user_name}! Your final account balance is ${user_money}.") 
                         break
 
-                timer = Timer(10, time_out)
-                timer.start()
+                timer = Timer(20, time_out)  
+                timer.start() #Here i m starting the timer for the 20 seconds countdown 
                 nb_user = int(input(f"{user_name}, please choose a number between 1 and {max_level}: "))
                              
                 timer.cancel()
