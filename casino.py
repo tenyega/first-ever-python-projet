@@ -1,6 +1,8 @@
 import random  
 # import of the __package__ inside the python 
 import streamlit as st
+import time 
+#   this is to get the counter running for the response time 
 
 
 # constant variables using snake case 
@@ -14,17 +16,15 @@ response=None
 level=1
 max_level=10
 max_attempts=3
+
 # def is used to declare the function  here its without parameters 
 # here the indentation is important in python
 def welcome():
     global user_name
     print("Welcome to the Casino!")
     user_name = input("Please enter your name: ")
-    # saisi au clavier  
- 
+    # saisi au clavier   
     # here the f is used for the formatted string literals 
-
-
 
 def python_number():
     global nb_python, max_level,user_bet, user_money
@@ -49,9 +49,13 @@ def user_number():
                     continue
                 print(f"Attempt {nb_attempts} of {max_attempts}.")
                 if(nb_user == nb_python):
-                    # new_bet= user_bet/2
-                    # user_money= user_money-user_bet
-                    # user_money= user_money+new_bet
+                    if(nb_attempts>3):
+                        
+                        new_bet= user_bet/2
+                        user_money= user_money-user_bet
+                        user_money= user_money+new_bet
+                
+                   
                     response= input(f"You have already guessed the correct number! you have {user_money} so do u want to move to next level ? y/n: ")
                     print(f"ur choice is {response}")
                     if(response == 'y' or response == 'Y'):
@@ -65,12 +69,14 @@ def user_number():
                         user_number()
                         if(nb_attempts== max_attempts): 
                             print(f"Thank you for playing with us see you next time ")
-                        else:  
+                            return
+                        elif(nb_attempts>max_attempts):  
                             print(f"Welcome to level {level}. The Python has chosen a new number between 1 and {max_level}.")
                     elif(response == 'n' or response == 'N'):
                         print(f"Thank you for playing, {user_name}! Your final account balance is ${user_money}.") 
                         break
 
+               
                 nb_user = int(input(f"{user_name}, please choose a number between 1 and {max_level}: "))
                 if 0 <= nb_user <= max_level:
                         compare_numbers()
@@ -80,8 +86,8 @@ def user_number():
             else :
                     user_money=user_money - user_bet                  
                     print(f"Sorry {user_name}, you've exceeded the maximum number of attempts. The correct number was {nb_python} and now your account is {user_money}.")
-                    break
-           
+                    return
+          
         except ValueError:
             print(f"Invalid input. Please enter an integer between 1 and {max_level}.")
 
